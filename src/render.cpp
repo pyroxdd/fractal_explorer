@@ -105,3 +105,11 @@ void zoom(float v){
 void offset(float x, float y){
     gl_offset(x, y);
 }
+
+void iter(int v){
+    gl_iter(v);
+}
+
+void time(float v){
+    gl_time(v);
+}

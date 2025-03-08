@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 //#include <SDL3/SDL_events.h>
 
-// #include <render.h>
+#include <render.h>
 
 SDL_Event event;
 
@@ -22,6 +22,8 @@ void input_init(){
     input.right = false;
     input.up = false;
     input.down = false;
+
+    input.iter = 1;
 }
 
 void input_quit(){
@@ -81,6 +83,19 @@ bool input_get(){
                             break;
                         case SDLK_d:
                             input.right = true;
+                            break;
+                        case SDLK_x:
+                            if (input.iter - 2 > 1){
+                                input.iter -= 2;
+                                iter(input.iter);
+                            }
+                            break;
+                        case SDLK_z:
+                        case SDLK_y:
+                            if (input.iter + 2 < 1023){
+                                input.iter += 2;
+                                iter(input.iter);
+                            }
                             break;
                     }
                 }

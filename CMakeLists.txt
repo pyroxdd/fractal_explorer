@@ -4,6 +4,21 @@ project(project)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+file(GLOB shaders CONFIGURE_DEPENDS
+    "${CMAKE_SOURCE_DIR}/src/*.glsl"
+)
+set(fths "C:\\file_to_header_string\\out\\fths")
+
+foreach(shader ${shaders})
+    get_filename_component(shader_name ${shader} NAME_WE)
+    set(header_name ${CMAKE_BINARY_DIR}/${shader_name}.h)
+    add_custom_target(prebuild_${shader_name} ALL
+        COMMAND ${fths} ${shader}
+    )
+
+    list(APPEND sources ${header_name})
+endforeach()
+
 set(OUT "${CMAKE_SOURCE_DIR}/out")
 add_compile_options(-fdeclspec)
 

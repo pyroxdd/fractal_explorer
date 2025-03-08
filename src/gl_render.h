@@ -12,3 +12,5 @@ void gl_clear();
 void gl_resize();
 void gl_zoom(float v);
 void gl_offset(float x, float y);
+void gl_iter(int v);
+void gl_time(float v);

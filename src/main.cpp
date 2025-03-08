@@ -8,11 +8,23 @@
 float gl_zoom = 1;
 fvec2 gl_pos = {0, 0};
 
+int gl_iter = 10;
+
+int tick = 0;
+
 static void loop(){
     if (input_get()) {
         emscripten_cancel_main_loop();
         return;
     }
+    // if (input.dec) gl_iter /= 2;
+    // if (gl_iter < 1) gl_iter = 1;
+    // if (input.inc) gl_iter *= 2;
+    // if (gl_iter > 1024) gl_iter = 1024;
+    // iter(gl_iter);
+
+    time(float(tick) / 100);
+
     if (input.scroll != 0){
         float speed = 0.1;
         gl_zoom *= 1 + input.scroll * speed;
@@ -32,6 +44,7 @@ static void loop(){
     clear();
     
     swap();
+    tick++;
 }
 
 int main(){
@@ -40,6 +53,7 @@ int main(){
     
     printf("hello");
     render_init(800, 600);
+    iter(gl_iter);
     input_init();
     emscripten_set_main_loop(loop, 0, true);
     return 0;

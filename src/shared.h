@@ -15,6 +15,11 @@ struct fvec2 {
     float y;
 };
 
+struct dvec2 {
+    double x;
+    double y;
+};
+
 struct input_struct {
     bool lmb;
     bool rmb;
@@ -26,4 +31,6 @@ struct input_struct {
     bool right;
     bool up;
     bool down;
+
+    int iter;
 };

@@ -6,3 +6,5 @@ void swap();
 void render_quit();
 void zoom(float v);
 void offset(float x, float y);
+void iter(int v);
+void time(float v);
