@@ -19,56 +19,9 @@ uvec2 screen_size;
 
 GLint projection_id;
 GLint model_id;
-
 GLint resolution_id;
-
-// unsigned int create_texture(int width, int height, void *data){
-//     GLuint texture_id;
-//     glGenTextures(1, &texture_id);
-//     glBindTexture(GL_TEXTURE_2D, texture_id);
-
-//     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
-//     glGenerateMipmap(GL_TEXTURE_2D);
-
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-//     glBindTexture(GL_TEXTURE_2D, 0);
-
-//     return texture_id;
-// }
-
-// void render_texture(unsigned int tex_id, fvec2 in_position, fvec2 in_size, float rotation){
-//     glm::vec2 position = glm::vec2(in_position.x, in_position.y);
-//     glm::vec2 size = glm::vec2(in_size.x, in_size.y);
-
-//     glUseProgram(main_program);
-
-//     glm::mat4 model = glm::mat4(1.0f);
-//     model = glm::translate(model, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-
-//     model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
-//     model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
-//     model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
-
-//     model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
-
-//     glUniformMatrix4fv(model_id, 1, false, glm::value_ptr(model));
-
-//     glm::mat4 texpart = glm::mat4(1.0f);
-//     glUniformMatrix4fv(texpart_id, 1, false, glm::value_ptr(texpart));
-
-//     glBindVertexArray(quadVAO);
-//     glBindTexture(GL_TEXTURE_2D, tex_id);
-
-//     glDrawArrays(GL_TRIANGLES, 0, 6);
-
-//     glBindTexture(GL_TEXTURE_2D, 0);
-//     glBindVertexArray(0);
-// }
+GLint zoom_id;
+GLint offset_id;
 
 void render_rect(unsigned int tex_id, fvec2 in_position, fvec2 in_size, float rotation){
     glm::vec2 position = glm::vec2(in_position.x, in_position.y);
@@ -222,6 +175,8 @@ void shader_init(){
     "\n"
     "uniform vec2 u_resolution;\n"
     "uniform float u_time;\n"
+    "uniform float u_zoom;\n"
+    "uniform vec2 u_offset;\n"
     "\n"
     "vec3 getColor(int iter, int maxIter) {\n"
     "    float t = float(iter) / float(maxIter);\n"
@@ -231,7 +186,7 @@ void shader_init(){
     "void main() {\n"
     "    vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / u_resolution.y;\n"
     "    \n"
-    "    vec2 c = uv;\n"
+    "    vec2 c = uv / u_zoom + u_offset;\n"
     "    vec2 z = vec2(0.0);\n"
     "    \n"
     "    int maxIter = 100;\n"
@@ -268,13 +223,13 @@ void shader_init(){
 
     projection_id = glGetUniformLocation(main_program, "projection");
     model_id = glGetUniformLocation(main_program, "model");
-    // texpart_id = glGetUniformLocation(main_program, "texpart");
-
     resolution_id = glGetUniformLocation(main_program, "u_resolution");
+    zoom_id = glGetUniformLocation(main_program, "u_zoom");
+    offset_id = glGetUniformLocation(main_program, "u_offset");
 
     printf("%d\n", glGetError());
 
-    std::cout << "uniform ids: "  << projection_id << " " << model_id << " " << resolution_id << std::endl;
+    std::cout << "uniform ids: "  << projection_id << " " << model_id << " " << resolution_id << " " << zoom_id << " " << offset_id << std::endl;
 }
 
 void gl_init(){
@@ -287,10 +242,19 @@ void gl_init(){
 
     render_rect_init();
 
-    // glUniform2i(resolution_id, screen_size.x, screen_size.y);
     printf("screen_size: %f, %f\n", float(screen_size.x), float(screen_size.y));
-    // glUniform2f(resolution_id, float(screen_size.x), float(screen_size.y));
     glUniform2f(resolution_id, screen_size.x, screen_size.y);
+
+    gl_zoom(1);
+    gl_offset(0, 0);
+}
+
+void gl_zoom(float v){
+    glUniform1f(zoom_id, v);
+}
+
+void gl_offset(float x, float y){
+    glUniform2f(offset_id, x, y);
 }
 
 void gl_clear(){

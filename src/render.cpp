@@ -97,3 +97,11 @@ void render_quit(){
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
+
+void zoom(float v){
+    gl_zoom(v);
+}
+
+void offset(float x, float y){
+    gl_offset(x, y);
+}

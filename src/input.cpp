@@ -73,6 +73,15 @@ bool input_get(){
                         case SDLK_w:
                             input.up = true;
                             break;
+                        case SDLK_a:
+                            input.left = true;
+                            break;
+                        case SDLK_s:
+                            input.down = true;
+                            break;
+                        case SDLK_d:
+                            input.right = true;
+                            break;
                     }
                 }
                 break;
@@ -80,6 +89,15 @@ bool input_get(){
                 switch(event.key.keysym.sym){
                     case SDLK_w:
                         input.up = false;
+                        break;
+                    case SDLK_a:
+                        input.left = false;
+                        break;
+                    case SDLK_s:
+                        input.down = false;
+                        break;
+                    case SDLK_d:
+                        input.right = false;
                         break;
                 }
                 break;

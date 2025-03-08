@@ -10,3 +10,5 @@ void render_rect(unsigned int tex_id, fvec2 in_position, fvec2 in_size, float ro
 void gl_init();
 void gl_clear();
 void gl_resize();
+void gl_zoom(float v);
+void gl_offset(float x, float y);
