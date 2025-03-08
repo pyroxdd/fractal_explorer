@@ -17,6 +17,9 @@ static void loop(){
 }
 
 int main(){
+    
+    
+    
     printf("hello");
     render_init(800, 600);
     input_init();

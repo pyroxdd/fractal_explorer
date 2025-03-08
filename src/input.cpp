@@ -3,6 +3,8 @@
 #include <SDL2/SDL.h>
 //#include <SDL3/SDL_events.h>
 
+// #include <render.h>
+
 SDL_Event event;
 
 input_struct input;
@@ -44,6 +46,11 @@ bool input_get(){
             case SDL_QUIT:
                 end = true;
                 break;
+            // case SDL_WINDOWEVENT:
+            //     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+            //         resize(event.window.data1, event.window.data2);
+            //     }
+            //     break;
             case SDL_MOUSEMOTION:
                 input.mouse_pos.x = event.motion.x;
                 input.mouse_pos.y = event.motion.y;

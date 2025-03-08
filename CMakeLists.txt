@@ -29,7 +29,15 @@ target_link_libraries(main PRIVATE
     includes
 )
 
+file(COPY "${CMAKE_SOURCE_DIR}/src/shell.html" DESTINATION "${CMAKE_BINARY_DIR}")
+
 target_link_options(main PRIVATE
+    --shell-file shell.html
+
+    -Wno-deprecated-declarations
+    -Wno-unused-variable
+    -Wno-unused-function
+
     -sWASM=1
     -sEXPORT_ALL=1
 

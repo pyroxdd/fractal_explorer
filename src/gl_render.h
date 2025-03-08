@@ -9,3 +9,4 @@ extern uvec2 screen_size;
 void render_rect(unsigned int tex_id, fvec2 in_position, fvec2 in_size, float rotation);
 void gl_init();
 void gl_clear();
+void gl_resize();

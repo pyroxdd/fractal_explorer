@@ -19,7 +19,6 @@ uvec2 screen_size;
 
 GLint projection_id;
 GLint model_id;
-GLint texpart_id;
 
 GLint resolution_id;
 
@@ -88,8 +87,8 @@ void render_rect(unsigned int tex_id, fvec2 in_position, fvec2 in_size, float ro
 
     glUniformMatrix4fv(model_id, 1, false, glm::value_ptr(model));
 
-    glm::mat4 texpart = glm::mat4(1.0f);
-    glUniformMatrix4fv(texpart_id, 1, false, glm::value_ptr(texpart));
+    // glm::mat4 texpart = glm::mat4(1.0f);
+    // glUniformMatrix4fv(texpart_id, 1, false, glm::value_ptr(texpart));
 
     glBindVertexArray(quadVAO);
     // glBindTexture(GL_TEXTURE_2D, tex_id);
@@ -128,62 +127,64 @@ void render_rect_init(){
 }
 
 void shader_init(){
-    unsigned char vertex[] = 
-    "#version 300 es\n"
-    "layout (location = 0) in vec4 vertex;\n"
-    "\n"
-    "out vec2 TexCoords;\n"
-    "\n"
-    "uniform mat4 model;\n"
-    "uniform mat4 projection;\n"
-    "uniform mat4 texpart;\n"
-    "\n"
-    "void main()\n"
-    "{\n"
-    "    TexCoords = (texpart * vec4(vertex.zw, 0.0, 1.0)).xy;\n"
-    "    gl_Position = projection * model * vec4(vertex.xy, 0.0, 1.0);\n"
-    "}\n"
-    "";
+    // unsigned char vertex[] = 
+    // "#version 300 es\n"
+    // "layout (location = 0) in vec4 vertex;\n"
+    // "\n"
+    // "out vec2 TexCoords;\n"
+    // "\n"
+    // "uniform mat4 model;\n"
+    // "uniform mat4 projection;\n"
+    // "uniform mat4 texpart;\n"
+    // "\n"
+    // "void main()\n"
+    // "{\n"
+    // "    TexCoords = (texpart * vec4(vertex.zw, 0.0, 1.0)).xy;\n"
+    // "    gl_Position = projection * model * vec4(vertex.xy, 0.0, 1.0);\n"
+    // "}\n"
+    // "";
 
-    unsigned char fragment[] = 
-    "#version 300 es\n"
-    "precision mediump float;\n"
-    "in vec2 TexCoords;\n"
-    "out vec4 fragcolor;\n"
-    "\n"
-    "uniform vec2 u_resolution; // Screen resolution (width, height)\n"
-    "uniform float u_time;      // Time variable for animations (optional)\n"
-    "\n"
-    "vec3 getColor(int iter, int maxIter) {\n"
-    "    // Normalize iteration count to a value between 0 and 1\n"
-    "    float t = float(iter) / float(maxIter);\n"
-    "    // Return a simple gradient (you can customize this)\n"
-    "    return vec3(t, t * t, t * t * t);\n"
-    "}\n"
-    "\n"
-    "void main() {\n"
-    "    // Map the fragment coordinate to the complex plane\n"
-    "    vec2 uv = (TexCoords - 0.5 * u_resolution) / u_resolution.y;\n"
-    "    \n"
-    "    // For Mandelbrot: c is the mapped coordinate and z starts at (0,0)\n"
-    "    vec2 c = uv;\n"
-    "    vec2 z = vec2(0.0);\n"
-    "    \n"
-    "    int maxIter = 100;\n"
-    "    int i;\n"
-    "\n"
-    "    // Iteratively apply z = z^2 + c\n"
-    "    for(i = 0; i < maxIter; i++){\n"
-    "         // If the magnitude squared exceeds 4, assume divergence\n"
-    "         if(dot(z, z) > 4.0) break;\n"
-    "         // Calculate z^2: (a+bi)^2 = (a^2 - b^2) + 2abi\n"
-    "         z = vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + c;\n"
-    "    }\n"
-    "    \n"
-    "    // Use the iteration count to choose a color\n"
-    "    vec3 color = getColor(i, maxIter);\n"
-    "    fragcolor = vec4(color, 1.0);\n"
-    "}\n";
+    // unsigned char fragment[] = 
+    // "#version 300 es\n"
+    // "precision mediump float;\n"
+    // "in vec2 TexCoords;\n"
+    // "out vec4 fragcolor;\n"
+    // "\n"
+    // "uniform vec2 u_resolution; // Screen resolution (width, height)\n"
+    // "uniform float u_time;      // Time variable for animations (optional)\n"
+    // "\n"
+    // "vec3 getColor(int iter, int maxIter) {\n"
+    // "    // Normalize iteration count to a value between 0 and 1\n"
+    // "    float t = float(iter) / float(maxIter);\n"
+    // "    // Return a simple gradient (you can customize this)\n"
+    // "    return vec3(t, t * t, t * t * t);\n"
+    // "}\n"
+    // "\n"
+    // "void main() {\n"
+    // "    // Map the fragment coordinate to the complex plane\n"
+    // "    vec2 uv = (TexCoords - 0.5 * u_resolution) / u_resolution.y;\n"
+    // "    \n"
+    // "    // For Mandelbrot: c is the mapped coordinate and z starts at (0,0)\n"
+    // "    vec2 c = uv;\n"
+    // "    vec2 z = vec2(0.0);\n"
+    // "    \n"
+    // "    int maxIter = 100;\n"
+    // "    int i;\n"
+    // "\n"
+    // "    // Iteratively apply z = z^2 + c\n"
+    // "    for(i = 0; i < maxIter; i++){\n"
+    // "         // If the magnitude squared exceeds 4, assume divergence\n"
+    // "         if(dot(z, z) > 4.0) break;\n"
+    // "         // Calculate z^2: (a+bi)^2 = (a^2 - b^2) + 2abi\n"
+    // "         z = vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + c;\n"
+    // "    }\n"
+    // "    \n"
+    // "    // Use the iteration count to choose a color\n"
+    // "    vec3 color = getColor(i, maxIter);\n"
+    // "    fragcolor = vec4(color, 1.0);\n"
+    // "}\n";
+
+
     // unsigned char fragment[] = 
     // "#version 300 es\n"
     // "precision mediump float;\n"
@@ -200,6 +201,51 @@ void shader_init(){
     // "    color.g = TexCoords.y / u_resolution.y;\n"
     // "    fragcolor = vec4(color.rg, TexCoords.x + TexCoords.y, 1.0);\n"
     // "}\n";
+
+    unsigned char vertex[] = 
+    "#version 300 es\n"
+    "layout (location = 0) in vec4 vertex;\n"
+    "\n"
+    "uniform mat4 model;\n"
+    "uniform mat4 projection;\n"
+    "\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = projection * model * vec4(vertex.xy, 0.0, 1.0);\n"
+    "}\n"
+    "";
+
+    unsigned char fragment[] = 
+    "#version 300 es\n"
+    "precision mediump float;\n"
+    "out vec4 fragcolor;\n"
+    "\n"
+    "uniform vec2 u_resolution;\n"
+    "uniform float u_time;\n"
+    "\n"
+    "vec3 getColor(int iter, int maxIter) {\n"
+    "    float t = float(iter) / float(maxIter);\n"
+    "    return vec3(t, t * t, t * t * t);\n"
+    "}\n"
+    "\n"
+    "void main() {\n"
+    "    vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / u_resolution.y;\n"
+    "    \n"
+    "    vec2 c = uv;\n"
+    "    vec2 z = vec2(0.0);\n"
+    "    \n"
+    "    int maxIter = 100;\n"
+    "    int i;\n"
+    "\n"
+    "    for(i = 0; i < maxIter; i++){\n"
+    "         if(dot(z, z) > 4.0) break;\n"
+    "         z = vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + c;\n"
+    "    }\n"
+    "    \n"
+    "    vec3 color = getColor(i, maxIter);\n"
+    "    fragcolor = vec4(color, 1.0);\n"
+    "}\n";
+
     printf("%d\n", glGetError());
     main_program = shaders_source((char *)(vertex), (char *)(fragment));
     printf("main_program: %d\n", main_program);
@@ -222,13 +268,13 @@ void shader_init(){
 
     projection_id = glGetUniformLocation(main_program, "projection");
     model_id = glGetUniformLocation(main_program, "model");
-    texpart_id = glGetUniformLocation(main_program, "texpart");
+    // texpart_id = glGetUniformLocation(main_program, "texpart");
 
     resolution_id = glGetUniformLocation(main_program, "u_resolution");
 
     printf("%d\n", glGetError());
 
-    std::cout << "uniform ids: "  << projection_id << " " << model_id << " " << texpart_id << " " << resolution_id << std::endl;
+    std::cout << "uniform ids: "  << projection_id << " " << model_id << " " << resolution_id << std::endl;
 }
 
 void gl_init(){
@@ -244,7 +290,7 @@ void gl_init(){
     // glUniform2i(resolution_id, screen_size.x, screen_size.y);
     printf("screen_size: %f, %f\n", float(screen_size.x), float(screen_size.y));
     // glUniform2f(resolution_id, float(screen_size.x), float(screen_size.y));
-    glUniform2f(resolution_id, float(1), float(1));
+    glUniform2f(resolution_id, screen_size.x, screen_size.y);
 }
 
 void gl_clear(){
@@ -254,4 +300,9 @@ void gl_clear(){
     projection = glm::translate(projection, glm::vec3(-1.0f, 1.0f, 0.0f));
     projection = glm::scale(projection, glm::vec3(2.0f / screen_size.x, -2.0f / screen_size.y, 1.0f));
     glUniformMatrix4fv(projection_id, 1, false, glm::value_ptr(projection));
+}
+
+void gl_resize(){
+    glUniform2f(resolution_id, screen_size.x, screen_size.y);
+    glViewport(0, 0, screen_size.x, screen_size.y);
 }
